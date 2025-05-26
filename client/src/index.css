@@ -1,0 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Oleo+Script:wght@400;700&display=swap');
+@import "tailwindcss";
+
+body {
+  color: white;
+}
+.great-vibes {
+  font-family: "Great Vibes", cursive;
+}
+.oleo{
+    font-family: "Oleo Script", system-ui;
+}
+
+.slider{
+  animation: slide-menu 1s ease-in ;
+}
+
+@keyframes slide-menu {
+  0%{
+    width:0;
+  }
+  50%{
+    width: 50%;
+  }
+  100%{
+    width: 100%;
+  }
+}
