@@ -1,6 +1,6 @@
 import dotenv from 'dotenv'
 dotenv.config({path:"./.env"})
-
+import fs from 'fs'
 import {v2 as cloudinary} from 'cloudinary'
 
 cloudinary.config({
@@ -17,8 +17,20 @@ export const uploadOnCloudinary=async(localFilePath)=>{
     
         if(!uploadedFile)return next(400,"Something went wrong... Unable to upload file on cloudinary")
 
+        fs.unlinkSync(localFilePath)
         return uploadedFile
     } catch (error) {
-        
+        console.error("Error uploading to Cloudinary:", error);
+
+    if (fs.existsSync(localFilePath)) {
+      fs.unlink(localFilePath, (unlinkError) => {
+        if(unlinkError){
+          console.error("Error deleting local file after upload failure", unlinkError);
+        } else {
+          console.log("Local file deleted due to error");
+        }
+     });
+    }
+    return null
     }
 }

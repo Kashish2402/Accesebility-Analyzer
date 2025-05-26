@@ -1,9 +1,11 @@
 import { User } from "../models/user.model.js";
 import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 // FUNCTION TO GENERATE AUTHENTICATION TOKEN
-const generateAccessTokenAndRefreshToken = async (userId) => {
+const generateAccessTokenAndRefreshToken = async (userId, next) => {
   if (!userId) return next(new ApiError("INVALID TOKEN ERROR"));
 
   const user = await User.findById(userId).select("-password");
@@ -21,11 +23,11 @@ const generateAccessTokenAndRefreshToken = async (userId) => {
 const signUp = asyncHandler(async (req, res, next) => {
   const { fullName, username, email, password, gender, dob } = req.body;
 
-  if (!fullName && !username && !email && !password && !gender && !dob) {
+  if (!fullName || !username || !email || !password || !gender || !dob) {
     return next(new ApiError(401, "Please fill all he fields."));
   }
 
-  const existingUser = await User.find({ email });
+  const existingUser = await User.findOne({ email });
   if (existingUser) return next(new ApiError(402, "User already exists..."));
 
   const user = await User.create({
@@ -41,7 +43,7 @@ const signUp = asyncHandler(async (req, res, next) => {
     return next(new ApiError(404, "Something went wrong... User not created."));
 
   const { accessToken, refreshToken } =
-    await generateAccessTokenAndRefreshToken();
+    await generateAccessTokenAndRefreshToken(user._id, next);
 
   const options = {
     httpOnly: true,
@@ -73,7 +75,7 @@ const login = asyncHandler(async (req, res, next) => {
   if (!checkPassword) return next(new ApiError(404, "Invalid password..."));
 
   const { accessToken, refreshToken } =
-    await generateAccessTokenAndRefreshToken();
+    await generateAccessTokenAndRefreshToken(user._id, next);
 
   const options = {
     httpOnly: true,
@@ -98,7 +100,7 @@ const changePassword = asyncHandler(async (req, res, next) => {
   const { oldPassword, newPassword, confirmNewPassword } = req.body;
   if (!req.user?._id) return next(new ApiError(401, "UNAUTHORISED REQUEST"));
 
-  if (!oldPassword && !newPassword && !confirmNewPassword)
+  if (!oldPassword || !newPassword || !confirmNewPassword)
     return next(new ApiError(400, "Please fill all fields"));
 
   const user = await User.findById(req.user._id);
@@ -112,35 +114,88 @@ const changePassword = asyncHandler(async (req, res, next) => {
   const checkPass = await user.validatePassword(oldPassword);
   if (!checkPass) return next(new ApiError(404, "Invalid old password..."));
 
-  const updatePassword = await User.findByIdAndUpdate(
-    req.user?._id,
-    { $set: { password: newPassword } },
-    { new: true }
-  );
-  if (!updatePassword)
-    return next(new ApiError(404, "Unable to update password.."));
+  user.password = newPassword;
+  await user.save();
 
-  return res.status(200).json(200, [], "Password updated Successfully...");
+  return res
+    .status(200)
+    .json(new ApiResponse(200, [], "Password updated Successfully..."));
 });
 
 // FUNCTION TO GET USER DETAILS
 const getUserDetails = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user._id).select("-password -refreshToken");
+  const user = await User.findById(req.user._id)
+    .lean()
+    .select("-password -refreshToken");
   if (!user) return next(new ApiError(404, "User not found..."));
-  return res.status(200).json(user);
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "Useer Details fetched Successfully.."));
 });
 
 // FUNCTION TO FETCH USER
-const fetchUser = asyncHandler(async (req, res, next) =>{
-    const user = await User.findById(req.user._id).select("-password -refreshToken");
-    if (!user) return next(new ApiError(404, "User not found..."))
-    return res.status(200).json(new ApiResponse(200,user,"User Fetched Successsfully..."))
-})
+const fetchUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id)
+    .lean()
+    .select("-password -refreshToken");
+  if (!user) return next(new ApiError(404, "User not found..."));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, user, "User Fetched Successsfully..."));
+});
 
 // FUNCTION TO UPDATE PROFILE PICTURE
-const updateProfilePicture=asyncHandler((req,res,next)=>{
-    
-})
+const updateProfilePicture = asyncHandler(async (req, res, next) => {
+  const file = req.file?.path;
 
+  if (!file) return next(new ApiError(404, "Please select a file..."));
 
-export { signUp, login, changePassword,fetchUser,getUserDetails };
+  const fileUpload = await uploadOnCloudinary(file);
+  if (!fileUpload) return next(new ApiError(404, "Unable to upload file..."));
+
+  const user = await User.findByIdAndUpdate(
+    req.user?._id,
+    {
+      $set: { profilePicture: fileUpload.secure_url },
+    },
+    { new: true }
+  );
+
+  if (!user)
+    return next(new ApiError(404, "Unable to update profile picture..."));
+
+  return res
+    .status(200)
+    .json(
+      new ApiResponse(200, user, "Profile picture updated Successfully...")
+    );
+});
+
+const logout = asyncHandler(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(
+    req.user._id,
+    { refreshToken: null },
+    { new: true }
+  );
+  if (!user) return next(new ApiError(404, "Unable to logout..."));
+  const options = {
+    httpOnly: true,
+    secure: true,
+  };
+
+  return res
+    .status(200)
+    .clearCookie("accessToken", options)
+    .clearCookie("refreshToken", options)
+    .json(new ApiResponse(200, null, "Logged out successfully."));
+});
+
+export {
+  signUp,
+  login,
+  changePassword,
+  fetchUser,
+  getUserDetails,
+  updateProfilePicture,
+  logout
+};
