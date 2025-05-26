@@ -20,6 +20,10 @@ pnpm-debug.log*
 .env.local
 .env.*.local
 
+.lock-wscript
+*.pid.lock
+
+
 # Editor-specific
 .vscode/
 .idea/
