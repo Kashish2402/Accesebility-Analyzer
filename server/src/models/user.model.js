@@ -25,9 +25,8 @@ const userSchema = new Schema(
     profile: {
       type: String,
     },
-    Dob: {
+    dob: {
       type: Date,
-      default: "",
     },
     gender: {
       type: String,
@@ -56,7 +55,7 @@ userSchema.methods.generateAccessToken = async function () {
   return jwt.sign(
     {
       _id: this._id,
-      fullName: fullName,
+      fullName: this.fullName,
       username: this.username,
       email: this.email,
     },

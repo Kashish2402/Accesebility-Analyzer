@@ -124,13 +124,13 @@ const changePassword = asyncHandler(async (req, res, next) => {
 
 // FUNCTION TO GET USER DETAILS
 const getUserDetails = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user._id)
+  const user = await User.findById(req.user?._id)
     .lean()
     .select("-password -refreshToken");
   if (!user) return next(new ApiError(404, "User not found..."));
   return res
     .status(200)
-    .json(new ApiResponse(200, user, "Useer Details fetched Successfully.."));
+    .json(new ApiResponse(200, user, "User Details fetched Successfully.."));
 });
 
 // FUNCTION TO FETCH USER
