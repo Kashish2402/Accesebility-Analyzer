@@ -1,49 +1,78 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 
-const accesebilityReportSchema = new Schema(
+const NodeSchema = new mongoose.Schema(
+  {
+    html: String,
+    target: [String],
+    failureSummary: String,
+  },
+  { _id: false }
+);
+
+const ResultSchema = new mongoose.Schema(
+  {
+    id: String,
+    impact: {
+      type: String,
+      enum: ["minor", "moderate", "serious", "critical", null],
+      default: null,
+    },
+    description: String,
+    help: String,
+    helpUrl: String,
+    tags: [String],
+    nodes: [NodeSchema],
+  },
+  { _id: false }
+);
+
+const SummarySchema = new mongoose.Schema(
+  {
+    totalViolations: Number,
+    totalPasses: Number,
+    totalIncomplete: Number,
+    totalInapplicable: Number,
+  },
+  { _id: false }
+);
+
+const AccessibilityReportSchema = new mongoose.Schema(
   {
     userId: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
       index: true,
     },
     inputType: {
       type: String,
-      enums: ["html", "url"],
+      enum: ["url", "html"],
       required: true,
     },
     inputValue: {
-      type: "String",
+      type: String,
       required: true,
     },
-    url: String,
-    summary: {
-      type: Schema.Types.ObjectId,
-      ref: "Summary",
-    },
-    violations: {
-      type: [Schema.Types.ObjectId],
-      ref: "Violation",
-    },
-    incomplete: {
-      type: [Schema.Types.ObjectId],
-      ref: "Violation",
-    },
-    inapplicable: {
-      type: [Schema.Types.ObjectId],
-      ref: "Violation",
-    },
+    url: String, 
+    summary: SummarySchema,
+    violations: [ResultSchema],
+    passes: [ResultSchema],
+    incomplete: [ResultSchema],
+    inapplicable: [ResultSchema],
     environment: {
       userAgent: String,
       windowWidth: Number,
       windowHeight: Number,
     },
     pdfUrl: String,
+   
   },
   {
-    timestamps: true,
+    timestamps: true, 
   }
 );
 
-export const AccesebilityReport = mongoose.model("AccesebilityReport",accesebilityReportSchema)
+export const AccessibilityReport = mongoose.model(
+  "AccessibilityReport",
+  AccessibilityReportSchema
+);
