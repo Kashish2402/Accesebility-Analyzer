@@ -3,9 +3,15 @@ import cookieParser from 'cookie-parser'
 import {errorHandler} from './middlewares/errorHandler.middleware.js'
 import path from "path";
 import { fileURLToPath } from "url";
+import cors from 'cors'
 
 const app=express()
 
+app.use(cors({
+    origin:"*",
+    credentials:true
+
+}))
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(express.static('public'))
