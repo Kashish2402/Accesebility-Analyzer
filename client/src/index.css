@@ -16,6 +16,26 @@ body {
   animation: slide-menu 1s ease-in ;
 }
 
+.dashboardHoverAnimation:hover{
+  /* border:2px solid darkviolet; */
+  outline: 2px solid transparent;
+  outline-offset: -2px;
+  animation: dashboardHoverAnimation 2s ease-in-out;
+}
+
+@keyframes dashboardHoverAnimation {
+  50%{
+    outline-offset: 2px;
+    outline-width: 4px;
+    outline-color: rgba(128, 128, 128, 0.75);
+  }
+  100%{
+    outline: 1px solid transparent;
+    outline-offset: -2px;
+    outline-width: 2px;
+  }
+}
+
 @keyframes slide-menu {
   0%{
     width:0;

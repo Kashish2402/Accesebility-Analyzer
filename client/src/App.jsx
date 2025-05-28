@@ -3,6 +3,7 @@ import AnalyzerForm from "./pages/AnalyzerForm";
 import Login from "./pages/Login";
 import SignUp from "./components/SignUp";
 import { Routes, Route } from "react-router-dom";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   const sideBarRef = useRef();
@@ -37,6 +38,7 @@ function App() {
         ></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
+        <Route path="/results" element={<Dashboard/>}></Route>
       </Routes>
     </div>
   );
