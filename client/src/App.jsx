@@ -4,9 +4,13 @@ import Login from "./pages/Login";
 import SignUp from "./components/SignUp";
 import { Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
+import { useDispatch, useSelector } from "react-redux";
+import { getUser } from "./features/authSlice";
 
 function App() {
   const sideBarRef = useRef();
+  const { authUser } = useSelector(state=>state.auth);
+  const dispatch = useDispatch();
 
   const [showMenu, setShowMenu] = useState(false);
 
@@ -23,6 +27,10 @@ function App() {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    dispatch(getUser());
+  }, [authUser,dispatch]);
+
   return (
     <div className="relative">
       <Routes>
@@ -38,7 +46,7 @@ function App() {
         ></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
-        <Route path="/results" element={<Dashboard/>}></Route>
+        <Route path="/results" element={<Dashboard />}></Route>
       </Routes>
     </div>
   );

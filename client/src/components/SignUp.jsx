@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import bg1 from "../assets/images/bg1.jpg";
 import Password from "../components/Password";
 import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { signUp } from "../features/authSlice";
 
 function SignUp() {
   const [formData, setFormData] = useState({
@@ -13,7 +15,33 @@ function SignUp() {
     gender: "",
   });
 
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { error } = useSelector((state) => state.auth);
+  const [showError, setShowError] = useState(error);
+
+  const validateEmail = () => {
+    const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.text(email);
+  };
+
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    if (!formData.username) {
+      setShowError("Please enter a username");
+      return;
+    }
+    if (!formData.fullName) {
+      setShowError("Please enter a full name");
+      return;
+    }
+    if (!formData.email) {
+      if (!validateEmail(formData.email)) setShowError("Please enter an email");
+      return;
+    }
+    dispatch(signUp());
+    navigate("/");
+  };
   return (
     <div
       className="min-h-screen w-screen bg-cover"
@@ -25,7 +53,9 @@ function SignUp() {
             Bright-Access
           </h1>
 
-          <h1 className="my-6 text-3xl font-semibold text-center w-full">Create your Account</h1>
+          <h1 className="my-6 text-3xl font-semibold text-center w-full">
+            Create your Account
+          </h1>
 
           <div className="w-[90%] flex flex-col items-center justify-center gap-5">
             <div className="w-full">
@@ -114,7 +144,7 @@ function SignUp() {
                     className="w-full bg-black rounded-2xl py-2 px-4 text-white/60 border-b border-gray-600 outline-none"
                     placeholder="Enter DOB"
                   />
-                 <span className="text-white/70">Male</span>
+                  <span className="text-white/70">Male</span>
                 </div>
 
                 <div className="flex items-center gap-2">
@@ -133,9 +163,14 @@ function SignUp() {
               </div>
             </div>
 
-            <button className="w-full mt-5 bg-blue-800 py-2 rounded-2xl cursor-pointer border-2 border-transparent hover:bg-transparent hover:border-blue-800 hover:text-blue-800 font-bold">
+            <button
+              className="w-full mt-5 bg-blue-800 py-2 rounded-2xl cursor-pointer border-2 border-transparent hover:bg-transparent hover:border-blue-800 hover:text-blue-800 font-bold"
+              onClick={handleSignUp}
+            >
               Create Account
             </button>
+
+            {showError && <p className="text-red-700 font-sm">${showError}</p>}
           </div>
 
           <div className="w-[90%] mt-6 px-4 flex items-center justify-between">
@@ -143,7 +178,10 @@ function SignUp() {
             <p className="text-gray-500/70 font-bold px-2">or</p>
             <div className="w-1/2 border border-gray-500/60"></div>
           </div>
-          <button className="w-[90%] mt-8 bg-blue-800 py-2 rounded-2xl cursor-pointer border-2 border-transparent hover:bg-transparent hover:border-blue-800 hover:text-blue-800 font-bold" onClick={()=>navigate('/login')}>
+          <button
+            className="w-[90%] mt-8 bg-blue-800 py-2 rounded-2xl cursor-pointer border-2 border-transparent hover:bg-transparent hover:border-blue-800 hover:text-blue-800 font-bold"
+            onClick={() => navigate("/login")}
+          >
             Login
           </button>
         </div>

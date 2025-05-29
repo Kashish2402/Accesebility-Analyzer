@@ -2,14 +2,43 @@ import React, { useState } from "react";
 import bg1 from "../assets/images/bg1.jpg";
 import Password from "../components/Password";
 import { useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../features/authSlice";
 
 function Login() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { error } = useSelector((state) => state.auth);
+  const [showError, setShowError] = useState(error);
 
-  const navigate=useNavigate()
+  const validateEmail = (email) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(email);
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    if (!validateEmail(formData.email)) {
+      setShowError("Please enter a valid Email address!!!");
+      return;
+    }
+    if(!formData.password){
+      setShowError("Please enter a valid password!!!");
+      return;
+    }
+    dispatch(login(formData));
+    setShowError("");
+    navigate('/')
+    setFormData({
+    email: "",
+    password: "",
+  })
+  };
+
   return (
     <div
       className="h-screen w-screen bg-cover"
@@ -21,7 +50,9 @@ function Login() {
             Bright-Access
           </h1>
 
-          <h1 className="my-6 text-3xl font-semibold w-full text-center">Login</h1>
+          <h1 className="my-6 text-3xl font-semibold w-full text-center">
+            Login
+          </h1>
 
           <div className="w-[90%] flex flex-col items-center justify-center gap-5">
             <div className="w-full">
@@ -48,9 +79,14 @@ function Login() {
               />
             </div>
 
-            <button className="w-full mt-5 bg-blue-800 py-2 rounded-2xl cursor-pointer border-2 border-transparent hover:bg-transparent hover:border-blue-800 hover:text-blue-800 font-bold">
+            <button
+              className="w-full mt-5 bg-blue-800 py-2 rounded-2xl cursor-pointer border-2 border-transparent hover:bg-transparent hover:border-blue-800 hover:text-blue-800 font-bold"
+              onClick={handleLogin}
+            >
               Login
             </button>
+
+            {showError && <p className="text-red-700 font-sm">{showError}</p>}
           </div>
 
           <div className="w-[90%] mt-6 px-4 flex items-center justify-between">
@@ -58,7 +94,10 @@ function Login() {
             <p className="text-gray-500/70 font-bold px-2">or</p>
             <div className="w-1/2 border border-gray-500/60"></div>
           </div>
-          <button className="w-[90%] mt-8 bg-blue-800 py-2 rounded-2xl cursor-pointer border-2 border-transparent hover:bg-transparent hover:border-blue-800 hover:text-blue-800 font-bold" onClick={()=>navigate('/signup')}>
+          <button
+            className="w-[90%] mt-8 bg-blue-800 py-2 rounded-2xl cursor-pointer border-2 border-transparent hover:bg-transparent hover:border-blue-800 hover:text-blue-800 font-bold"
+            onClick={() => navigate("/signup")}
+          >
             SignUp
           </button>
         </div>
