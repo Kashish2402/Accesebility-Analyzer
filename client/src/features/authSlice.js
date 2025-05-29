@@ -7,7 +7,6 @@ export const getUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/users/fetch-current-user`);
-      console.log("In getUser ",response.data.data)
       return response.data.data;
     } catch (error) {
       return rejectWithValue(
@@ -39,7 +38,6 @@ export const login = createAsyncThunk(
     try {
       const response = await axiosInstance.post(`/users/login`, userData);
       toast.success(response?.data?.message);
-      console.log("In Login",response.data.data)
       return response.data?.data?.userDetails;
     } catch (error) {
       return rejectWithValue(

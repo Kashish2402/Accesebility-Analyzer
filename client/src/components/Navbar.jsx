@@ -9,7 +9,7 @@ function Navbar({ toggleMenu, showMenu }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  console.log(authUser);
+
 
   return (
     <div className="absolute top-[5vh] md:top-[10vh] left-1/2 -translate-x-1/2 w-[90%] md:w-3/4  bg-black/40 drop-shadow-2xl z-2 py-3 px-10 rounded-4xl flex items-center justify-between">
