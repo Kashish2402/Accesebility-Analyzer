@@ -20,6 +20,7 @@ export const signUp = createAsyncThunk(
   "auth/signUp",
   async (userData, { rejectWithValue }) => {
     try {
+      console.log(userData)
       const response = await axiosInstance.post(`/users/signUp`, userData);
       toast.success(response?.data?.message);
       return response.data.data;

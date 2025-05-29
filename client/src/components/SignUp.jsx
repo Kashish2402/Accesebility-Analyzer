@@ -7,8 +7,8 @@ import { signUp } from "../features/authSlice";
 
 function SignUp() {
   const [formData, setFormData] = useState({
-    username: "",
     fullName: "",
+    username: "",
     email: "",
     password: "",
     dob: "",
@@ -21,8 +21,8 @@ function SignUp() {
   const [showError, setShowError] = useState(error);
 
   const validateEmail = () => {
-    const email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return regex.text(email);
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(formData.email);
   };
 
   const handleSignUp = (e) => {
@@ -39,7 +39,7 @@ function SignUp() {
       if (!validateEmail(formData.email)) setShowError("Please enter an email");
       return;
     }
-    dispatch(signUp());
+    dispatch(signUp(formData));
     navigate("/");
   };
   return (
@@ -49,7 +49,7 @@ function SignUp() {
     >
       <div className="w-full min-h-screen backdrop-brightness-50  flex items-center justify-center">
         <div className="border border-gray-600/70 rounded-2xl py-4 flex flex-col items-center w-[min(450px,80vw)] bg-black/50 backdrop-blur-2xl">
-          <h1 className="text-white/80 great-vibes text-3xl font-semibold">
+          <h1 className="text-white/80 great-vibes text-3xl font-semibold cursor-pointer" onClick={()=>navigate('/')}>
             Bright-Access
           </h1>
 
@@ -113,7 +113,7 @@ function SignUp() {
             </div>
 
             <div className="w-full">
-              <label htmlFor="age" className="w-full text-lg ml-2">
+              <label htmlFor="dob" className="w-full text-lg ml-2">
                 Date of birth:{" "}
               </label>
               <input
@@ -153,7 +153,7 @@ function SignUp() {
                     value="female"
                     checked={formData.gender === "female"}
                     onChange={(e) =>
-                      setFormData({ ...formData, dob: e.target.value })
+                      setFormData({ ...formData, gender: e.target.value })
                     }
                     className="w-full bg-black rounded-2xl py-2 px-4 text-white/60 border-b border-gray-600 outline-none"
                     placeholder="Enter DOB"
@@ -170,7 +170,7 @@ function SignUp() {
               Create Account
             </button>
 
-            {showError && <p className="text-red-700 font-sm">${showError}</p>}
+            {showError && <p className="text-red-700 font-sm">{showError}</p>}
           </div>
 
           <div className="w-[90%] mt-6 px-4 flex items-center justify-between">

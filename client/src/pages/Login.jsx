@@ -46,7 +46,7 @@ function Login() {
     >
       <div className="w-full h-full backdrop-brightness-50  flex items-center justify-center">
         <div className="border border-gray-600/70 rounded-2xl py-4 flex flex-col items-center w-[min(450px,80vw)] bg-black/50 backdrop-blur-2xl">
-          <h1 className="text-white/80 great-vibes text-3xl font-semibold">
+          <h1 className="text-white/80 great-vibes text-3xl font-semibold cursor-pointer" onClick={()=>navigate('/')}>
             Bright-Access
           </h1>
 

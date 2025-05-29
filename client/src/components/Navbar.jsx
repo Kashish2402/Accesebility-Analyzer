@@ -12,7 +12,7 @@ function Navbar({ toggleMenu, showMenu }) {
 
   return (
     <div className="absolute top-[5vh] md:top-[10vh] left-1/2 -translate-x-1/2 w-[90%] md:w-3/4  bg-black/40 drop-shadow-2xl z-2 py-3 px-10 rounded-4xl flex items-center justify-between">
-      <h1 className="text-white/80 great-vibes text-2xl font-semibold">
+      <h1 className="text-white/80 great-vibes text-2xl font-semibold cursor-pointer" onClick={() =>navigate("/")}>
         Bright-Access
       </h1>
 
