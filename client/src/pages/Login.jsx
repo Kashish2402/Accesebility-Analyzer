@@ -4,8 +4,10 @@ import Password from "../components/Password";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/authSlice";
+import { Loader } from "lucide-react";
 
 function Login() {
+  const {isLoading}=useSelector(state=>state.auth)
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -20,7 +22,7 @@ function Login() {
     return regex.test(email);
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     if (!validateEmail(formData.email)) {
       setShowError("Please enter a valid Email address!!!");
@@ -30,7 +32,7 @@ function Login() {
       setShowError("Please enter a valid password!!!");
       return;
     }
-    dispatch(login(formData));
+    await dispatch(login(formData));
     setShowError("");
     navigate('/')
     setFormData({
@@ -80,10 +82,10 @@ function Login() {
             </div>
 
             <button
-              className="w-full mt-5 bg-blue-800 py-2 rounded-2xl cursor-pointer border-2 border-transparent hover:bg-transparent hover:border-blue-800 hover:text-blue-800 font-bold"
+              className="w-full mt-5 bg-blue-800 py-2 rounded-2xl cursor-pointer border-2 border-transparent hover:bg-transparent hover:border-blue-800 hover:text-blue-800 font-bold flex items-center justify-center"
               onClick={handleLogin}
             >
-              Login
+              {isLoading?<Loader/>:"Login"}
             </button>
 
             {showError && <p className="text-red-700 font-sm">{showError}</p>}

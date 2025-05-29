@@ -7,6 +7,7 @@ export const getUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.get(`/users/fetch-current-user`);
+      console.log("In getUser ",response.data.data)
       return response.data.data;
     } catch (error) {
       return rejectWithValue(
@@ -20,10 +21,10 @@ export const signUp = createAsyncThunk(
   "auth/signUp",
   async (userData, { rejectWithValue }) => {
     try {
-      console.log(userData)
       const response = await axiosInstance.post(`/users/signUp`, userData);
       toast.success(response?.data?.message);
-      return response.data.data;
+      
+      return response.data?.data?.userDetails;
     } catch (error) {
       return rejectWithValue(
         error.response?.data?.message || "Unable to register User"
@@ -38,7 +39,8 @@ export const login = createAsyncThunk(
     try {
       const response = await axiosInstance.post(`/users/login`, userData);
       toast.success(response?.data?.message);
-      return response.data.data;
+      console.log("In Login",response.data.data)
+      return response.data?.data?.userDetails;
     } catch (error) {
       return rejectWithValue(
         error?.response?.data?.message || "Unable to login User"
@@ -53,7 +55,7 @@ export const logout = createAsyncThunk(
     try {
       const response = await axiosInstance.post(`/users/logout`);
       toast.success(response?.data?.message || "User logged out successfully");
-      return response.data;
+      return response.data.data;
     } catch (error) {
       return rejectWithValue(
         error?.response?.data?.message || "Unable to logout User"

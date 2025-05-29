@@ -17,6 +17,7 @@ function App() {
   const toggleMenu = () => {
     setShowMenu(!showMenu);
   };
+ 
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -29,10 +30,11 @@ function App() {
 
   useEffect(() => {
     dispatch(getUser());
-  }, [authUser,dispatch]);
+  }, [dispatch]);
 
   return (
     <div className="relative">
+      
       <Routes>
         <Route
           path="/"
