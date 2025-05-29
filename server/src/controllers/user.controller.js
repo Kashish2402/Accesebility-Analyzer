@@ -57,7 +57,7 @@ const signUp = asyncHandler(async (req, res, next) => {
     .json(
       new ApiResponse(
         200,
-        { authuser: user, accessToken, refreshToken },
+        { userDetails: user, accessToken, refreshToken },
         "Sign in successful"
       )
     );
@@ -89,7 +89,7 @@ const login = asyncHandler(async (req, res, next) => {
     .json(
       new ApiResponse(
         200,
-        { authuser: user, accessToken, refreshToken },
+        { userDetails: user, accessToken, refreshToken },
         "Sign in successful"
       )
     );
