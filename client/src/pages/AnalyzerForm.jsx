@@ -1,11 +1,43 @@
-import React from "react";
+import React, { useState } from "react";
 import bg from "../assets/images/bg.jpg";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import { useDispatch, useSelector } from "react-redux";
+import { analyzePdf, analyzeUrl } from "../features/ResultsSlice";
+import { Loader2 } from "lucide-react";
 
 function AnalyzerForm({ sideBarRef, showMenu, toggleMenu }) {
+  const dispatch = useDispatch();
+  const [url, setUrl] = useState("");
+  const [file, setFile] = useState("");
+  const [preview, setPreview] = useState("");
+  const {loading,error}=useSelector(state=>state.result)
+
+  const handleFileChange = (e) => {
+
+    const selectedFile = e.target.files[0];
+    setFile(selectedFile)
+    setPreview(selectedFile)
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log("Button clicked")
+    if (url) {
+      await dispatch(analyzeUrl({ url }));
+    }
+    if (file) {
+      console.log(`Analyzing file: `)
+      const formData = new FormData();
+      formData.append("upladedFile", file);
+      await dispatch(analyzePdf(formData));
+    }
+  };
   return (
-    <div
+    <>
+   {loading?<div className="h-screen w-screen flex items-center justify-center">
+    <Loader2 size={30}/>
+    </div> : <div
       className={`min-h-screen w-screen flex items-center justify-center relative`}
     >
       <Navbar showMenu={showMenu} toggleMenu={toggleMenu} />
@@ -49,26 +81,44 @@ function AnalyzerForm({ sideBarRef, showMenu, toggleMenu }) {
                 type="text"
                 className="bg-black outline-none w-full border-b border-gray-500/30 py-2 px-4 rounded-xl"
                 placeholder="Enter a URL"
+                value={url}
+                onChange={(e) => setUrl(e.target.value)}
               />
             </div>
 
-            <div className="md:w-1/2 h-[200px] rounded-xl border border-dashed border-gray-500/30 text-gray-400 flex items-center justify-center mt-3 md:m-0">
+            <div className="md:w-1/2 h-[200px] rounded-xl border border-dashed border-gray-500/30 text-gray-400 flex items-center justify-center mt-3 md:m-0 relative">
               <label
                 htmlFor="file"
                 className="cursor-pointer hover:text-white transition"
               >
-                <input type="file" id="file" className="hidden" />
+                <input
+                  type="file"
+                  id="file"
+                  className="hidden"
+                  accept=".html"
+                  onChange={handleFileChange}
+                />
                 Drop a HTML file to analyze
               </label>
+
+              {preview && (
+                <div className="absolute bottom-0 left-2 h-full w-full flex items-end mb-3 z-100">
+                  <h1>File Selected: {preview.name}</h1>
+                </div>
+              )}
             </div>
           </div>
 
-          <button className="w-full  hover:from-lime-400 bg-white/80 text-black py-2 mt-4 font-bold rounded-2xl transition cursor-pointer">
+          <button
+            className="w-full  hover:from-lime-400 bg-white/80 text-black py-2 mt-4 font-bold rounded-2xl transition cursor-pointer"
+            onClick={handleSubmit}
+          >
             Analyze
           </button>
         </div>
       </div>
-    </div>
+    </div>}
+    </>
   );
 }
 

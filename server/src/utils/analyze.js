@@ -29,7 +29,7 @@ export const analyzeURL = async (url) => {
 };
 
 export const analyzeHtml = async (html) => {
-  if (!htmlFile) throw new Error("HTML CONTENT REQUIRED");
+  if (!html) throw new Error("HTML CONTENT REQUIRED");
 
   const htmlFile = await readFile(html, "utf-8");
 

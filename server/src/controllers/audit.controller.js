@@ -5,6 +5,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { AccessibilityReport } from "../models/AccessebilityReport.js";
 import {getReportHtml} from '../utils/reportTemplate.js'
 import { generatePdf } from "../utils/pdfGenerator.js";
+import fs from 'fs/promises'
 
 const analyzeUrl = asyncHandler(async (req, res, next) => {
   const { url } = req.body;
@@ -50,18 +51,30 @@ const analyzeUrl = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, results, "Url Analyzed Successfully"));
 });
 
-export const analyzePdf = asyncHandler(async (req, res, next) => {
-  const pdf = req.file.path;
+const analyzePdf = asyncHandler(async (req, res, next) => {
+  const uplodedFile = req.file.path;
+  console.log("HTML File: ",uplodedFile)
+  if(!uplodedFile)new ApiError(400, "No file uploaded");
 
   // FETCHING RESULTS FROM AXE-CORE
-  const results = await analyzeHtml(pdf);
-  if (!results) return next(new ApiError(400, "Unable to fetch result"));
+  
+  let results 
+  
+  
+  try {   
+    results = await analyzeHtml(uplodedFile);
+  } catch (error) {
+    console.error("Error during analyzeHtml:", error);
+    return next(new ApiError(500, `Error analyzing HTML: ${error.message}`));
+  }
 
+  if (!results) return next(new ApiError(400, "Unable to fetch result"));
+  console.log("Results: ",results)
   // SAVE RESULTS TO DB
   const report = await AccessibilityReport.create({
     userId: req.user?._id,
     inputType: "pdf",
-    inputValue: pdf,
+    inputValue: uplodedFile,
     url: null,
     summary: {
       totalViolations: results.violations.length,
@@ -88,6 +101,7 @@ export const analyzePdf = asyncHandler(async (req, res, next) => {
   report.pdfUrl = pdfUrl;
   await report.save();
 
+  await fs.unlink(uplodedFile)
 
   return res
     .status(200)
@@ -99,4 +113,4 @@ export const analyzePdf = asyncHandler(async (req, res, next) => {
       )
     );
 });
-export { analyzeUrl };
+export { analyzeUrl , analyzePdf};
