@@ -34,11 +34,11 @@ function AnalyzerForm({ sideBarRef, showMenu, toggleMenu }) {
       try {
         const res = await dispatch(analyzeUrl({ url }));
         console.log(res)
-        // if (res?.payload?._id) {
-        //   navigate(`/results/${res.payload._id}`);
-        // } else {
-        //   setShowError("Something went wrong, please try again.");
-        // }
+        if (res?.payload?._id) {
+          navigate(`/results/${res.payload?.userId}`);
+        } else {
+          setShowError("Something went wrong, please try again.");
+        }
       } catch (error) {
         setShowError(error.message);
       }
@@ -50,7 +50,7 @@ function AnalyzerForm({ sideBarRef, showMenu, toggleMenu }) {
         formData.append("upladedFile", file);
         const res = await dispatch(analyzePdf(formData));
         if (res?.payload?._id) {
-          navigate(`/results/${res.payload._id}`);
+          navigate(`/results/${res.payload?.userId}`);
         } else {
           setShowError("Something went wrong, please try again.");
         }
