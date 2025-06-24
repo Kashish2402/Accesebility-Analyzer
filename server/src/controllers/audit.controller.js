@@ -73,7 +73,7 @@ const analyzePdf = asyncHandler(async (req, res, next) => {
   // SAVE RESULTS TO DB
   const report = await AccessibilityReport.create({
     userId: req.user?._id,
-    inputType: "pdf",
+    inputType: "html",
     inputValue: uplodedFile,
     url: null,
     summary: {

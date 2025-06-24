@@ -6,7 +6,6 @@ export const analyzeUrl = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(`analyze/analyzeUrl`, data);
-      console.log(response.data.data);
       return response.data.data;
     } catch (error) {
       rejectWithValue(
@@ -65,6 +64,9 @@ const resultSlice = createSlice({
       }),
 
   reducers: {
+    fetchResults:(state)=>{
+
+    },
     reset: (state) => {
       state.result = null;
       state.error = "";
