@@ -1,10 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { AlignJustify, LogOut } from "lucide-react";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../features/authSlice";
+import { reset } from "../features/ResultsSlice";
 
-function Navbar({ toggleMenu, showMenu }) {
+function Navbar({ toggleMenu }) {
   const { authUser,isAuthenticated } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -53,6 +54,7 @@ function Navbar({ toggleMenu, showMenu }) {
                 onClick={(e) => {
                   e.preventDefault();
                   dispatch(logout());
+                  dispatch(reset())
                 }}
                 aria-label="Logout"
               />

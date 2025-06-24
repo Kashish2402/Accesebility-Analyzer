@@ -1,10 +1,22 @@
-import React  from "react";
+import React, { useEffect }  from "react";
 import Summary from "../components/Summary";
 import Violation from "../components/Violation";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { getResult } from "../features/ResultsSlice";
+import { useParams } from "react-router-dom";
+import Loading from "../components/Loading";
 
 function Dashboard() {
-  const { result } = useSelector((state) => state.result);
+  const { result,loading } = useSelector((state) => state.result);
+  const dispatch=useDispatch()
+  const {id}=useParams()
+useEffect(() => {
+    if (id) {
+      dispatch(getResult(id));
+    }
+  }, [id, dispatch]);
+
+  if(loading)return<Loading/>
   return (
     <div className="min-h-screen w-full bg-[#121212]">
       <div className="w-full flex flex-col justify-center items-center gap-10 pt-20">
