@@ -3,9 +3,9 @@ import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { ApiError } from "../utils/ApiError.js";
 import { AccessibilityReport } from "../models/AccessebilityReport.js";
-import {getReportHtml} from '../utils/reportTemplate.js'
+import { getReportHtml } from "../utils/reportTemplate.js";
 import { generatePdf } from "../utils/pdfGenerator.js";
-import fs from 'fs/promises'
+import fs from "fs/promises";
 
 const analyzeUrl = asyncHandler(async (req, res, next) => {
   const { url } = req.body;
@@ -40,12 +40,12 @@ const analyzeUrl = asyncHandler(async (req, res, next) => {
   });
 
   // GENERATING REPORT AND SAVING ITS URL TO DATABASE
-  const html=getReportHtml(report)
+  const html = getReportHtml(report);
   const pdf = await generatePdf(html, `report - ${report._id}`);
   report.pdfUrl = pdf;
   await report.save();
 
-  if(!results) return next(400,'unable to generate reports')
+  if (!results) return next(400, "unable to generate reports");
   return res
     .status(200)
     .json(new ApiResponse(200, results, "Url Analyzed Successfully"));
@@ -53,15 +53,14 @@ const analyzeUrl = asyncHandler(async (req, res, next) => {
 
 const analyzePdf = asyncHandler(async (req, res, next) => {
   const uplodedFile = req.file.path;
-  console.log("HTML File: ",uplodedFile)
-  if(!uplodedFile)new ApiError(400, "No file uploaded");
+  console.log("HTML File: ", uplodedFile);
+  if (!uplodedFile) new ApiError(400, "No file uploaded");
 
   // FETCHING RESULTS FROM AXE-CORE
-  
-  let results 
-  
-  
-  try {   
+
+  let results;
+
+  try {
     results = await analyzeHtml(uplodedFile);
   } catch (error) {
     console.error("Error during analyzeHtml:", error);
@@ -69,7 +68,7 @@ const analyzePdf = asyncHandler(async (req, res, next) => {
   }
 
   if (!results) return next(new ApiError(400, "Unable to fetch result"));
-  console.log("Results: ",results)
+  console.log("Results: ", results);
   // SAVE RESULTS TO DB
   const report = await AccessibilityReport.create({
     userId: req.user?._id,
@@ -96,12 +95,12 @@ const analyzePdf = asyncHandler(async (req, res, next) => {
   if (!report) return next(new ApiError(400, "Unable to generate Report"));
 
   // GENERATING REPORT AND SAVING ITS URL TO DATABASE
-  const html=getReportHtml(report)
+  const html = getReportHtml(report);
   const pdfUrl = await generatePdf(html, `report - ${report._id}`);
   report.pdfUrl = pdfUrl;
   await report.save();
 
-  await fs.unlink(uplodedFile)
+  await fs.unlink(uplodedFile);
 
   return res
     .status(200)
@@ -113,4 +112,31 @@ const analyzePdf = asyncHandler(async (req, res, next) => {
       )
     );
 });
-export { analyzeUrl , analyzePdf};
+
+const getUserResults = asyncHandler(async (req, res, next) => {
+  if (!req?.user?._id)
+    return next(
+      new ApiError(404, "User not logged in so unable to found user results")
+    );
+
+  const results = await AccessibilityReport.find({
+    $match: { userId: req?.user?._id },
+  });
+  if (!results) return next(new ApiError(404, "No results found for user"));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, results, "User Results fetched successfully"));
+});
+
+const getResults=asyncHandler(async(req,res,next)=>{
+  const {id}=req.params
+  if(!id) return next(new ApiError(404,"No id provided"))
+    const results=await AccessibilityReport.findById(id)
+  if(!results) return next(new ApiError(404,"No results found"))
+    if(!results.userId.equals(req?.user?._id)) return next(new ApiError(401,"You are not authorized to access this report"))
+      return res
+    .status(200)
+    .json(new ApiResponse(200,results,"Report fetched successfully"))
+})
+
+export { analyzeUrl, analyzePdf ,getUserResults,getResults};
