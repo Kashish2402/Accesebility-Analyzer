@@ -54,16 +54,7 @@ function Sidebar({ toggleMenu, showMenu,sideBarRef, authUser = null }) {
             <History />
             History
           </li>
-          <li
-            className="py-6 w-full flex items-center justify-center gap-3 cursor-pointer hover:bg-gray-500/20"
-            onClick={() => {
-              navigate("/profile");
-              toggleMenu();
-            }}
-          >
-            <User2 />
-            Profile
-          </li>
+          
           {!authUser && (
             <li className="md:hidden py-6 w-full flex items-center justify-center gap-3 cursor-pointer">
               <button

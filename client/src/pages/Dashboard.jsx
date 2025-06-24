@@ -11,6 +11,7 @@ function Dashboard() {
   const dispatch = useDispatch();
   const { id } = useParams();
  
+  console.log(result)
   useEffect(() => {
   const fetchData = async () => {
     if (id) {

@@ -114,12 +114,28 @@ const getResults = asyncHandler(async (req, res, next) => {
     return next(new ApiError(400, "Invalid ID format"));
   }
   const results = await AccessibilityReport.findById(id);
-  console.log(results)
+  console.log(results);
   if (!results) return next(new ApiError(404, "No results found"));
-  if(!results.userId.equals(req?.user?._id)) return next(new ApiError(401,"You are not authorized to access this report"))
+  if (!results.userId.equals(req?.user?._id))
+    return next(
+      new ApiError(401, "You are not authorized to access this report")
+    );
   return res
     .status(200)
     .json(new ApiResponse(200, results, "Report fetched successfully"));
 });
 
-export { analyzeUrl, analyzePdf, getUserResults, getResults };
+const deleteReport = asyncHandler(async (req, res, next) => {
+  const { id } = req.params;
+  if (!id) return next(new ApiError(404, "No id provided"));
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return next(new ApiError(400, "Invalid ID format"));
+  }
+  const report = await AccessibilityReport.findByIdAndDelete(id);
+  if (!report) return next(new ApiError(404, "No report found"));
+  return res
+    .status(200)
+    .json(new ApiResponse(200, report, "Report deleted successfully"));
+});
+
+export { analyzeUrl, analyzePdf, getUserResults, getResults, deleteReport };

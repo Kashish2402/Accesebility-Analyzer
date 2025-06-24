@@ -6,7 +6,7 @@ import { Routes, Route } from "react-router-dom";
 import Dashboard from "./pages/Dashboard";
 import { useDispatch, useSelector } from "react-redux";
 import { getUser } from "./features/authSlice";
-
+import History from "./pages/History"
 function App() {
   const sideBarRef = useRef();
   const { authUser } = useSelector(state=>state.auth);
@@ -49,6 +49,7 @@ function App() {
         <Route path="/login" element={<Login />}></Route>
         <Route path="/signup" element={<SignUp />}></Route>
         <Route path="/results/:id" element={<Dashboard />}></Route>
+        <Route path="/history" element={<History/>}></Route>
       </Routes>
     </div>
   );

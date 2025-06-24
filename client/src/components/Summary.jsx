@@ -26,7 +26,7 @@ function Summary({data}) {
           <td className="w-[30%] py-1 px-3">
             <strong>User Agent:</strong>
           </td>
-          <td className="w-[70%] text-center">{data?.testEnvironment?.userAgent}</td>
+          <td className="w-[70%] text-center">{data?.environment?.userAgent}</td>
         </tr>
 
         <tr className="bg-gray-500/10 divide-gray-600/50 divide-x px-2">
@@ -34,7 +34,7 @@ function Summary({data}) {
             <strong>Window size:</strong>
           </td>
           <td className="w-[70%] text-center">
-            {data?.testEnvironment?.windowWidth} x {data?.testEnvironment?.windowHeight}
+            {data?.environment?.windowWidth} x {data?.environment?.windowHeight}
           </td>
         </tr>
 
@@ -50,7 +50,7 @@ function Summary({data}) {
             <strong>TimeStamp:</strong>
           </td>
           <td className="w-[70%] text-center rounded-b-lg">
-            {data?.timestamp}
+            {data?.createdAt}
           </td>
         </tr>
       </table>

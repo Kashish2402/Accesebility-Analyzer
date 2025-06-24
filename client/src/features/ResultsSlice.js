@@ -55,6 +55,20 @@ export const getUserResults = createAsyncThunk(
     }
   }
 );
+
+export const deleteResults = createAsyncThunk(
+  "result/deleteResults",
+  async (id, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.delete(`analyze/delete/${id}`);
+      return id;
+    } catch (error) {
+      return rejectWithValue(
+        error?.response?.data?.message || "Unable to get user results"
+      );
+    }
+  }
+);
 const resultSlice = createSlice({
   name: "result",
   initialState: {
@@ -119,6 +133,22 @@ const resultSlice = createSlice({
       .addCase(getResult.rejected, (state, action) => {
         state.error = action.payload;
         state.loading = false;
+      })
+      .addCase(deleteResults.pending, (state) => {
+        state.error = null;
+        state.loading = true;
+      })
+      .addCase(deleteResults.fulfilled, (state, action) => {
+        state.loading = false;
+        console.log("Deleting from Redux:", action.payload);
+
+        state.userResults = state.userResults.filter(
+          (item) => item?._id !== action.payload
+        );
+      })
+      .addCase(deleteResults.rejected, (state, action) => {
+        state.error = action.payload;
+        state.loading = false;
       }),
 
   reducers: {
@@ -126,7 +156,7 @@ const resultSlice = createSlice({
       state.result = null;
       state.error = "";
       state.loading = false;
-      state.userResults=[]
+      state.userResults = [];
     },
   },
 });
