@@ -45,10 +45,10 @@ const analyzeUrl = asyncHandler(async (req, res, next) => {
   report.pdfUrl = pdf;
   await report.save();
 
-  if (!results) return next(400, "unable to generate reports");
+  if (!report) return next(400, "unable to generate reports");
   return res
     .status(200)
-    .json(new ApiResponse(200, results, "Url Analyzed Successfully"));
+    .json(new ApiResponse(200, report, "Url Analyzed Successfully"));
 });
 
 const analyzePdf = asyncHandler(async (req, res, next) => {
