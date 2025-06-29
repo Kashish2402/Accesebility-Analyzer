@@ -1,27 +1,31 @@
 import puppeteer from "puppeteer-core";
 import { readFile } from "fs/promises";
-import { axeCorePath } from "../app.js";
+import { axeCorePath } from "../app.js"; // Ensure axeCorePath is correctly defined elsewhere
 import chromium from '@sparticuz/chromium';
+
+const commonPuppeteerArgs = [
+  ...chromium.args,
+  '--hide-scrollbars',
+  '--disable-web-security',
+  '--no-sandbox',
+  '--disable-setuid-sandbox',
+  '--disable-dev-shm-usage',
+  '--disable-accelerated-2d-canvas',
+  '--no-first-run',
+  '--no-zygote',
+  '--single-process',
+  '--disable-gpu',
+];
 
 export const analyzeURL = async (url) => {
   if (!url) throw new Error("URL is required");
 
   const browser = await puppeteer.launch({
-    headless: "new",
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-accelerated-2d-canvas",
-      "--no-first-run",
-      "--no-zygote",
-      "--single-process",
-      "--disable-gpu",
-    ],
-    executablePath:
-      await chromium.executablePath(),
+    headless: chromium.headless,
+    args: commonPuppeteerArgs,
+    executablePath: await chromium.executablePath(),
   });
-  console.log("Using Chrome from:", puppeteer.executablePath());
+  console.log("Using Chrome from:", await browser.executablePath());
 
   try {
     const page = await browser.newPage();
@@ -32,46 +36,57 @@ export const analyzeURL = async (url) => {
     });
 
     const results = await page.evaluate(async () => {
-      return await window.axe.run();
+      if (typeof window.axe !== 'undefined') {
+        return await window.axe.run();
+      } else {
+        console.error("Axe Core not loaded on the page.");
+        return null;
+      }
     });
 
     return results;
   } catch (error) {
-    console.error("Accessibility analysis failed:", error);
+    console.error("Accessibility analysis failed for URL:", error);
     throw error;
   } finally {
     await browser.close();
   }
 };
 
-export const analyzeHtml = async (html) => {
-  if (!html) throw new Error("HTML CONTENT REQUIRED");
+export const analyzeHtml = async (htmlFilePath) => {
+  if (!htmlFilePath || typeof htmlFilePath !== 'string') {
+    throw new Error("HTML FILE PATH REQUIRED and must be a string");
+  }
 
-  const htmlFile = await readFile(html, "utf-8");
+  let htmlContent;
+  try {
+    htmlContent = await readFile(htmlFilePath, "utf-8");
+  } catch (error) {
+    console.error(`Error reading HTML file from path: ${htmlFilePath}`, error);
+    throw new Error(`Failed to read HTML file: ${error.message}`);
+  }
 
   const browser = await puppeteer.launch({
-    headless: "new",
-    args: [
-      "--no-sandbox",
-      "--disable-setuid-sandbox",
-      "--disable-dev-shm-usage",
-      "--disable-accelerated-2d-canvas",
-      "--no-first-run",
-      "--no-zygote",
-      "--single-process",
-      "--disable-gpu",
-    ],
-    executablePath:
-      await chromium.executablePath(),
+    headless: chromium.headless,
+    args: commonPuppeteerArgs,
+    executablePath: await chromium.executablePath(),
   });
+  console.log("Using Chrome from:", await browser.executablePath());
+
   try {
     const page = await browser.newPage();
-    await page.setContent(htmlFile);
+    await page.setContent(htmlContent);
     await page.addScriptTag({
-      path: axeCorePath,
+        path: axeCorePath,
     });
+
     const results = await page.evaluate(async () => {
-      return await window.axe.run();
+        if (typeof window.axe !== 'undefined') {
+            return await window.axe.run();
+        } else {
+            console.error("Axe Core not loaded on the page for HTML analysis.");
+            return null;
+        }
     });
     return results;
   } catch (error) {
