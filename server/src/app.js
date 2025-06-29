@@ -22,7 +22,7 @@ const __dirname = path.resolve();
 
 
 export const axeCorePath = path.join(__dirname, "../node_modules/axe-core/axe.min.js");
-
+console.log("Axe Core path resolved to:", axeCorePath);
 
 import userRoutes from './routes/user.routes.js'
 import analyzeRoutes from "./routes/analye.routes.js"
