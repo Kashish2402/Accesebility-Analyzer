@@ -25,7 +25,7 @@ export const analyzeURL = async (url) => {
     args: commonPuppeteerArgs,
     executablePath: await chromium.executablePath(),
   });
-  console.log("Using Chrome from:", await browser.executablePath());
+  console.log("Using Chrome from:", await chromium.executablePath());
 
   try {
     const page = await browser.newPage();
@@ -71,7 +71,7 @@ export const analyzeHtml = async (htmlFilePath) => {
     args: commonPuppeteerArgs,
     executablePath: await chromium.executablePath(),
   });
-  console.log("Using Chrome from:", await browser.executablePath());
+  console.log("Using Chrome from:", await chromium.executablePath());
 
   try {
     const page = await browser.newPage();
