@@ -16,14 +16,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(express.static('public'))
 app.use(cookieParser())
-app.use((req, res, next) => {
-  res.removeHeader("Content-Security-Policy"); // Remove any existing one just to be safe
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self'; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; connect-src 'self'; script-src 'self';"
-  );
-  next();
-});
+
 
 
 
