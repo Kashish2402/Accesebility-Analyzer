@@ -198,7 +198,8 @@ const guestLogin = asyncHandler(async (req, res, next) => {
     guest = await User.create({
       fullName: "Guest User",
       username: "guestuser",
-      email: "guest@gmail.com",// this will be hashed via your model
+      password:"guest123",
+      email: "guest@gmail.com",
       role: "guest", 
     });
   }

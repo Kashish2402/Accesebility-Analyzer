@@ -3,11 +3,11 @@ import bg1 from "../assets/images/bg1.jpg";
 import Password from "../components/Password";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
-import { login } from "../features/authSlice";
-import { Loader } from "lucide-react";
+import { login, guestLogin } from "../features/authSlice";
+import { Loader, User2 } from "lucide-react";
 
 function Login() {
-  const {isLoading}=useSelector(state=>state.auth)
+  const { isLoading } = useSelector((state) => state.auth);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -28,17 +28,26 @@ function Login() {
       setShowError("Please enter a valid Email address!!!");
       return;
     }
-    if(!formData.password){
+    if (!formData.password) {
       setShowError("Please enter a valid password!!!");
       return;
     }
     await dispatch(login(formData));
+    
     setShowError("");
-    navigate('/')
+    navigate("/");
     setFormData({
-    email: "",
-    password: "",
-  })
+      email: "",
+      password: "",
+    });
+  };
+
+  const handleGuestLogin = async (e) => {
+    e.preventDefault();
+   await dispatch(guestLogin());
+    
+    setShowError("");
+    navigate("/");
   };
 
   return (
@@ -48,7 +57,10 @@ function Login() {
     >
       <div className="w-full h-full backdrop-brightness-50  flex items-center justify-center">
         <div className="border border-gray-600/70 rounded-2xl py-4 flex flex-col items-center w-[min(450px,80vw)] bg-black/50 backdrop-blur-2xl">
-          <h1 className="text-white/80 great-vibes text-3xl font-semibold cursor-pointer" onClick={()=>navigate('/')}>
+          <h1
+            className="text-white/80 great-vibes text-3xl font-semibold cursor-pointer"
+            onClick={() => navigate("/")}
+          >
             Bright-Access
           </h1>
 
@@ -82,10 +94,17 @@ function Login() {
             </div>
 
             <button
-              className="w-full mt-5 bg-blue-800 py-2 rounded-2xl cursor-pointer border-2 border-transparent hover:bg-transparent hover:border-blue-800 hover:text-blue-800 font-bold flex items-center justify-center"
+              className="w-full mt-5 bg-blue-800 py-2 rounded-2xl cursor-pointer border-2 border-transparent hover:bg-transparent hover:border-blue-800 hover:text-blue-800 font-bold flex items-center justify-center transition-all ease-in duration-150 delay-50"
               onClick={handleLogin}
             >
-              {isLoading?<Loader/>:"Login"}
+              {isLoading ? <Loader /> : "Login"}
+            </button>
+
+            <button
+              className="w-full flex items-center bg-transparent justify-center py-2 gap-3 border-2 rounded-2xl border-blue-800 cursor-pointer text-blue-800 font-bold hover:bg-blue-800 hover:text-white transition-all ease-in duration-150 delay-50"
+              onClick={handleGuestLogin}
+            >
+              <User2 size={20} /> Login as guest
             </button>
 
             {showError && <p className="text-red-700 font-sm">{showError}</p>}

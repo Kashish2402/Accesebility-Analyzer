@@ -16,13 +16,26 @@ export const getUser = createAsyncThunk(
   }
 );
 
+export const guestLogin = createAsyncThunk(
+  "auth/guestLogin",
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await axiosInstance.post("/users/guest-login");
+      toast.success(response?.data?.message);
+      return response.data.data?.userDetails;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Unable to login");
+    }
+  }
+);
+
 export const signUp = createAsyncThunk(
   "auth/signUp",
   async (userData, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(`/users/signUp`, userData);
       toast.success(response?.data?.message);
-      
+
       return response.data?.data?.userDetails;
     } catch (error) {
       return rejectWithValue(
@@ -209,8 +222,17 @@ const authSlice = createSlice({
       .addCase(fetchUserDetails.rejected, (state, action) => {
         state.isLoading = false;
         state.error = action.payload;
+      }).addCase(guestLogin.pending,(state)=>{
+        state.error=null;
+        state.isLoading=true;
+      }).addCase(guestLogin.fulfilled,(state,action)=>{
+        state.authUser=action.payload;
+        state.isLoading=false;
+        state.isAuthenticated=true
+      }).addCase(guestLogin.rejected,(state,action)=>{
+        state.isLoading=false;
+        state.error=action.payload;
       }),
-
 });
 
 export default authSlice.reducer;
