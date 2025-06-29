@@ -13,6 +13,7 @@
   "author": "Kashish Gupta",
   "license": "ISC",
   "dependencies": {
+    "axe-core": "^4.10.3",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.6.1",
     "cookie-parser": "^1.4.7",
@@ -24,8 +25,6 @@
     "mongoose": "^8.15.0",
     "multer": "^2.0.0",
     "nodemon": "^3.1.10",
-    "puppeteer": "^24.9.0",
-    "axe-core": "^4.10.3"
-  },
-  "devDependencies": {}
+    "puppeteer": "^24.11.1"
+  }
 }

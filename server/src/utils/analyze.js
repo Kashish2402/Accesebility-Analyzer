@@ -1,6 +1,5 @@
 import puppeteer from "puppeteer";
 import { readFile } from "fs/promises";
-import { read } from "fs";
 import { axeCorePath } from "../app.js";
 
 export const analyzeURL = async (url) => {
@@ -9,7 +8,7 @@ export const analyzeURL = async (url) => {
   const browser = await puppeteer.launch({
     headless: "new",
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    executablePath: puppeteer.executablePath(),
+    executablePath:process.env.PUPPETEER_CACHE_DIR,
   });
   console.log("Using Chrome from:", puppeteer.executablePath());
 
