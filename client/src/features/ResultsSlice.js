@@ -32,7 +32,6 @@ export const analyzePdf = createAsyncThunk(
   async (pdf, { rejectWithValue }) => {
     try {
       const response = await axiosInstance.post(`analyze/analyzepdf`, pdf);
-      console.log(response.data.data);
       return response.data.data;
     } catch (error) {
       return rejectWithValue(
@@ -140,8 +139,6 @@ const resultSlice = createSlice({
       })
       .addCase(deleteResults.fulfilled, (state, action) => {
         state.loading = false;
-        console.log("Deleting from Redux:", action.payload);
-
         state.userResults = state.userResults.filter(
           (item) => item?._id !== action.payload
         );

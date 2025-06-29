@@ -27,7 +27,6 @@ function Dashboard() {
     const element = pdfRef.current;
 
     if (!element) {
-      console.error("pdfRef is null");
       return;
     }
     const opt = {

@@ -24,7 +24,6 @@ function AnalyzerForm({ sideBarRef, showMenu, toggleMenu }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Button clicked");
     if (!file && !url) {
       setShowError("Please select a file or enter a URL");
       return;
@@ -33,7 +32,6 @@ function AnalyzerForm({ sideBarRef, showMenu, toggleMenu }) {
     if (url) {
       try {
         const res = await dispatch(analyzeUrl({ url }));
-        console.log(res)
         if (res?.payload?._id) {
           navigate(`/results/${res.payload?._id}`);
         } else {
@@ -45,7 +43,6 @@ function AnalyzerForm({ sideBarRef, showMenu, toggleMenu }) {
     }
     if (file) {
       try {
-        console.log(`Analyzing file: `);
         const formData = new FormData();
         formData.append("upladedFile", file);
         const res = await dispatch(analyzePdf(formData));

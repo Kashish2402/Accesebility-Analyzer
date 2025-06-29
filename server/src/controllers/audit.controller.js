@@ -43,7 +43,6 @@ const analyzeUrl = asyncHandler(async (req, res, next) => {
 
 const analyzePdf = asyncHandler(async (req, res, next) => {
   const uplodedFile = req.file.path;
-  console.log("HTML File: ", uplodedFile);
   if (!uplodedFile) return next(new ApiError(400, "No file uploaded"));
 
   // FETCHING RESULTS FROM AXE-CORE
@@ -114,7 +113,6 @@ const getResults = asyncHandler(async (req, res, next) => {
     return next(new ApiError(400, "Invalid ID format"));
   }
   const results = await AccessibilityReport.findById(id);
-  console.log(results);
   if (!results) return next(new ApiError(404, "No results found"));
   if (!results.userId.equals(req?.user?._id))
     return next(
