@@ -1,0 +1,35 @@
+{
+  "name": "accessebility-analyzer",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "nodemon server/src/index.js",
+    "start": "node server/src/index.js",
+    "bulid": "npm install && npm install --prefix frontend && npm run build --prefix frontend && npm run build --prefix server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kashish2402/Accesebility-Analyzer.git"
+  },
+  "author": "Kashish Gupta",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kashish2402/Accesebility-Analyzer/issues"
+  },
+  "homepage": "https://github.com/Kashish2402/Accesebility-Analyzer#readme",
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cloudinary": "^2.7.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.0.0",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongodb": "^6.17.0",
+    "mongoose": "^8.16.1",
+    "multer": "^2.0.1",
+    "nodemon": "^3.1.10"
+  }
+}
