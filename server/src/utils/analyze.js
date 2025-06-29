@@ -1,6 +1,7 @@
 import puppeteer from "puppeteer-core";
 import { readFile } from "fs/promises";
 import { axeCorePath } from "../app.js";
+import chromium from '@sparticuz/chromium';
 
 export const analyzeURL = async (url) => {
   if (!url) throw new Error("URL is required");
