@@ -3,6 +3,7 @@ import { ApiError } from "../utils/ApiError.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
+import jwt from "jsonwebtoken";
 
 // FUNCTION TO GENERATE AUTHENTICATION TOKEN
 const generateAccessTokenAndRefreshToken = async (userId, next) => {
@@ -190,6 +191,41 @@ const logout = asyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, null, "Logged out successfully."));
 });
 
+const guestLogin = asyncHandler(async (req, res, next) => {
+  let guest = await User.findOne({ email: "guest@gmail.com" });
+
+  if (!guest) {
+    guest = await User.create({
+      fullName: "Guest User",
+      username: "guestuser",
+      email: "guest@gmail.com",// this will be hashed via your model
+      role: "guest", 
+    });
+  }
+
+  const { accessToken, refreshToken } =
+    await generateAccessTokenAndRefreshToken(guest._id, next);
+
+  const options = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "Lax",
+  };
+
+  return res
+    .status(200)
+    .cookie("accessToken", accessToken, options)
+    .cookie("refreshToken", refreshToken, options)
+    .json(
+      new ApiResponse(
+        200,
+        { userDetails: guest, accessToken, refreshToken },
+        "Guest logged in successfully"
+      )
+    );
+});
+
+
 export {
   signUp,
   login,
@@ -197,5 +233,6 @@ export {
   fetchUser,
   getUserDetails,
   updateProfilePicture,
-  logout
+  logout,
+  guestLogin,
 };
