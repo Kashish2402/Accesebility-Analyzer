@@ -22,9 +22,13 @@ app.use(cookieParser())
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+app.use(express.static(path.join(__dirname,"/client/dist")))
 
 export const axeCorePath = path.join(__dirname, "../node_modules/axe-core/axe.min.js");
 
+app.get("*", (_, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+  });
 
 
 import userRoutes from './routes/user.routes.js'
