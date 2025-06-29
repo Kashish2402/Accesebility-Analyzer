@@ -7,10 +7,12 @@ export const analyzeURL = async (url) => {
   if (!url) throw new Error("URL is required");
 
   const browser = await puppeteer.launch({
-  headless: "new", 
-  args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  executablePath: puppeteer.executablePath(), 
-});
+    headless: "new",
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    executablePath: puppeteer.executablePath(),
+  });
+  console.log("Using Chrome from:", puppeteer.executablePath());
+
   try {
     const page = await browser.newPage();
     await page.goto(url);
@@ -25,7 +27,7 @@ export const analyzeURL = async (url) => {
 
     return results;
   } catch (error) {
-    console.error("Accessibility analysis failed:", error.message);
+    console.error("Accessibility analysis failed:", error);
     throw error;
   } finally {
     await browser.close();
@@ -38,10 +40,10 @@ export const analyzeHtml = async (html) => {
   const htmlFile = await readFile(html, "utf-8");
 
   const browser = await puppeteer.launch({
-  headless: "new", 
-  args: ["--no-sandbox", "--disable-setuid-sandbox"],
-  executablePath: puppeteer.executablePath(), 
-});
+    headless: "new",
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+    executablePath: puppeteer.executablePath(),
+  });
   try {
     const page = await browser.newPage();
     await page.setContent(htmlFile);
