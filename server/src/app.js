@@ -26,10 +26,6 @@ app.use(express.static(path.join(__dirname,"/client/dist")))
 
 export const axeCorePath = path.join(__dirname, "../node_modules/axe-core/axe.min.js");
 
-app.get("*", (_, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
-  });
-
 
 import userRoutes from './routes/user.routes.js'
 import analyzeRoutes from "./routes/analye.routes.js"
@@ -37,6 +33,10 @@ import analyzeRoutes from "./routes/analye.routes.js"
 app.use("/api/v1/users",userRoutes)
 app.use("/api/v1/analyze",analyzeRoutes)
 
+
+app.get("*", (_, res) => {
+    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+  });
 
 app.use(errorHandler)
 
