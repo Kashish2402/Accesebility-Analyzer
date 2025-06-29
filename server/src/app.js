@@ -8,7 +8,7 @@ import cors from 'cors'
 const app=express()
 
 app.use(cors({
-    origin:"https://brightaccess.netlify.app/",
+    origin:"https://accesebility-analyzer.onrender.com/",
     credentials:true
 
 }))
