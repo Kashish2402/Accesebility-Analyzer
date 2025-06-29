@@ -3,7 +3,7 @@ import { readFile } from "fs/promises";
 import { read } from "fs";
 import { axeCorePath } from "../app.js";
 
-export const analyzeUrl = asyncHandler(async (req, res) => {
+export const analyzeURL = asyncHandler(async (req, res) => {
   try {
     const { url } = req.body;
     if (!url) throw new ApiError(400, "URL is required");
