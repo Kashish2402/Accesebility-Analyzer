@@ -7,7 +7,9 @@
   "scripts": {
     "dev": "nodemon src/index.js",
     "build": "echo 'No build step for backend'",
-    "start": "node src/index.js"
+    "start": "node src/index.js",
+    "postinstall": "../../render-build.sh"
+
   },
   "author": "Kashish Gupta",
   "license": "ISC",
