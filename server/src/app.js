@@ -8,7 +8,7 @@ import cors from 'cors'
 const app=express()
 
 app.use(cors({
-    origin:"https://accesebility-analyzer.onrender.com/",
+    origin:"https://accesebility-analyzer.onrender.com",
     credentials:true
 
 }))
@@ -16,6 +16,15 @@ app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(express.static('public'))
 app.use(cookieParser())
+app.use((req, res, next) => {
+ res.setHeader(
+  "Content-Security-Policy",
+  "default-src 'self'; font-src 'self' https://fonts.googleapis.com https://fonts.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; connect-src 'self' https://accessibility-analyzer.netlify.app"
+);
+
+  next();
+});
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
