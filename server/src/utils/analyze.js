@@ -1,4 +1,4 @@
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
 import { readFile } from "fs/promises";
 import { axeCorePath } from "../app.js";
 
@@ -7,8 +7,20 @@ export const analyzeURL = async (url) => {
 
   const browser = await puppeteer.launch({
     headless: "new",
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    executablePath:process.env.PUPPETEER_CACHE_DIR,
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-accelerated-2d-canvas",
+      "--no-first-run",
+      "--no-zygote",
+      "--single-process",
+      "--disable-gpu",
+    ],
+    executablePath:
+      process.env.PUPPETEER_EXECUTABLE_PATH ||
+      "/usr/bin/google-chrome" ||
+      "/usr/bin/chromium",
   });
   console.log("Using Chrome from:", puppeteer.executablePath());
 
@@ -40,8 +52,20 @@ export const analyzeHtml = async (html) => {
 
   const browser = await puppeteer.launch({
     headless: "new",
-    args: ["--no-sandbox", "--disable-setuid-sandbox"],
-    executablePath: puppeteer.executablePath(),
+    args: [
+      "--no-sandbox",
+      "--disable-setuid-sandbox",
+      "--disable-dev-shm-usage",
+      "--disable-accelerated-2d-canvas",
+      "--no-first-run",
+      "--no-zygote",
+      "--single-process",
+      "--disable-gpu",
+    ],
+    executablePath:
+      process.env.PUPPETEER_EXECUTABLE_PATH ||
+      "/usr/bin/google-chrome" ||
+      "/usr/bin/chromium",
   });
   try {
     const page = await browser.newPage();
