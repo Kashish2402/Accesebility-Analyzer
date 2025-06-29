@@ -18,9 +18,7 @@ export const analyzeURL = async (url) => {
       "--disable-gpu",
     ],
     executablePath:
-      process.env.PUPPETEER_EXECUTABLE_PATH ||
-      "/usr/bin/google-chrome" ||
-      "/usr/bin/chromium",
+      await chromium.executablePath(),
   });
   console.log("Using Chrome from:", puppeteer.executablePath());
 
@@ -63,9 +61,7 @@ export const analyzeHtml = async (html) => {
       "--disable-gpu",
     ],
     executablePath:
-      process.env.PUPPETEER_EXECUTABLE_PATH ||
-      "/usr/bin/google-chrome" ||
-      "/usr/bin/chromium",
+      await chromium.executablePath(),
   });
   try {
     const page = await browser.newPage();
