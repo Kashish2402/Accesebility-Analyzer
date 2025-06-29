@@ -6,7 +6,10 @@ import { axeCorePath } from "../app.js";
 export const analyzeURL = async (url) => {
   if (!url) throw new Error("URL is required");
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: "new",
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   try {
     const page = await browser.newPage();
     await page.goto(url);
@@ -33,7 +36,10 @@ export const analyzeHtml = async (html) => {
 
   const htmlFile = await readFile(html, "utf-8");
 
-  const browser = await puppeteer.launch();
+  const browser = await puppeteer.launch({
+    headless: "new",
+    args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  });
   try {
     const page = await browser.newPage();
     await page.setContent(htmlFile);
