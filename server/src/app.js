@@ -22,7 +22,9 @@ app.use(cookieParser())
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-app.use(express.static(path.join(__dirname,"/client/dist")))
+const rootDir = path.join(__dirname, "../../"); 
+
+app.use(express.static(path.join(rootDir, "client/dist")));
 
 export const axeCorePath = path.join(__dirname, "../node_modules/axe-core/axe.min.js");
 
