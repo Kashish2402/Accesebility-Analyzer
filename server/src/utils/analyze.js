@@ -9,6 +9,7 @@ export const analyzeURL = async (url) => {
   const browser = await puppeteer.launch({
   headless: "new", 
   args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  executablePath: puppeteer.executablePath(), 
 });
   try {
     const page = await browser.newPage();
@@ -39,6 +40,7 @@ export const analyzeHtml = async (html) => {
   const browser = await puppeteer.launch({
   headless: "new", 
   args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  executablePath: puppeteer.executablePath(), 
 });
   try {
     const page = await browser.newPage();
