@@ -16,7 +16,7 @@ function AnalyzerForm({ sideBarRef, showMenu, toggleMenu }) {
   const [preview, setPreview] = useState("");
   const { loading, error , isAuthenticated} = useSelector((state) => state.result);
   const [showError, setShowError] = useState(error);
-  const [message,setMessage]=useState(false)
+  
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -27,7 +27,7 @@ function AnalyzerForm({ sideBarRef, showMenu, toggleMenu }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if(!isAuthenticated){
-      setMessage(true)
+      navigate('/login')
     }
     if (!file && !url) {
       setShowError("Please select a file or enter a URL");
@@ -147,14 +147,7 @@ function AnalyzerForm({ sideBarRef, showMenu, toggleMenu }) {
                 Analyze
               </button>
 
-              {
-                message && (
-                  <div className="absolute top-1/2 left-1/2 -translate-1/2 bg-black/60 rounded-2xl flex flex-col items-center justify-center gap-5">
-                    <h1>Please login to analyze your website</h1>
-                    <button className="bg-blue-700 p-2 cursor-pointer" onClick={()=>setMessage(!message)}>Ok</button>
-                  </div>
-                )
-              }
+          
             </div>
           </div>
         </div>
