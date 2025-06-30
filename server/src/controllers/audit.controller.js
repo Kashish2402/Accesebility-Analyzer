@@ -36,6 +36,8 @@ const analyzeUrl = asyncHandler(async (req, res, next) => {
     },
   });
 
+  if(!report) return next(new ApiError(400,"Unable to generate Report... or We do not have access to analyze this URL"))
+
   return res
     .status(200)
     .json(new ApiResponse(200, report, "Url Analyzed Successfully"));
