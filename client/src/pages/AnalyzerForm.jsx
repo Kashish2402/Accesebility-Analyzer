@@ -60,7 +60,7 @@ function AnalyzerForm({ sideBarRef, showMenu, toggleMenu }) {
   return (
     <>
       {loading ? (
-        <Loading />
+        <Loading analyzing={true}/>
       ) : (
         <div
           className={`min-h-screen w-screen flex items-center justify-center relative`}

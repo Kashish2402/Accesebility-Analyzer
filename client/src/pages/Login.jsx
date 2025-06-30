@@ -51,7 +51,7 @@ function Login() {
     navigate("/");
   };
 
-  if(isLoading)return <Loading/>
+  if(isLoading)return <Loading analyzing={false}/>
   return (
     <div
       className="h-screen w-screen bg-cover"
