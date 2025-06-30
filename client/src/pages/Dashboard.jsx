@@ -42,7 +42,7 @@ function Dashboard() {
   };
 
   if (!result) return null;
-  if (loading) return <Loading />;
+  if (loading) return <Loading analyzing={false}/>;
   return (
     <div className="min-h-screen w-full bg-[#121212]">
       <div className="w-full flex flex-col justify-center items-center gap-10 pt-20">
