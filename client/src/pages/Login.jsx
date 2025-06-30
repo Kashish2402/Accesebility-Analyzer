@@ -5,6 +5,7 @@ import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { login, guestLogin } from "../features/authSlice";
 import { Loader, User2 } from "lucide-react";
+import Loading from "../components/Loading";
 
 function Login() {
   const { isLoading } = useSelector((state) => state.auth);
@@ -44,12 +45,13 @@ function Login() {
 
   const handleGuestLogin = async (e) => {
     e.preventDefault();
-   await dispatch(guestLogin());
+    await dispatch(guestLogin());
     
     setShowError("");
     navigate("/");
   };
 
+  if(isLoading)return <Loading/>
   return (
     <div
       className="h-screen w-screen bg-cover"
@@ -97,7 +99,7 @@ function Login() {
               className="w-full mt-5 bg-blue-800 py-2 rounded-2xl cursor-pointer border-2 border-transparent hover:bg-transparent hover:border-blue-800 hover:text-blue-800 font-bold flex items-center justify-center transition-all ease-in duration-150 delay-50"
               onClick={handleLogin}
             >
-              {isLoading ? <Loader /> : "Login"}
+              "Login"
             </button>
 
             <button

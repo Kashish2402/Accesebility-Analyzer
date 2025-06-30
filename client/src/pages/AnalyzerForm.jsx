@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { analyzePdf, analyzeUrl } from "../features/ResultsSlice";
 import { Loader2 } from "lucide-react";
 import { useNavigate } from "react-router";
+import Loading from "../components/Loading";
 
 function AnalyzerForm({ sideBarRef, showMenu, toggleMenu }) {
   const dispatch = useDispatch();
@@ -59,9 +60,7 @@ function AnalyzerForm({ sideBarRef, showMenu, toggleMenu }) {
   return (
     <>
       {loading ? (
-        <div className="h-screen w-screen flex items-center justify-center">
-          <Loader2 size={30} />
-        </div>
+        <Loading />
       ) : (
         <div
           className={`min-h-screen w-screen flex items-center justify-center relative`}
