@@ -17,11 +17,12 @@ app.use(express.urlencoded({extended:true}))
 app.use(express.static('public'))
 app.use(cookieParser())
 
-const __dirname = path.resolve();
+const __filename=fileURLToPath(import.meta.url)
+const __dirname = path.dirname(__filename);
  
 
 
-export const axeCorePath = path.join(__dirname, "../node_modules/axe-core/axe.min.js");
+export const axeCorePath = path.join(__dirname, "../../node_modules/axe-core/axe.min.js");
 console.log("Axe Core path resolved to:", axeCorePath);
 
 import userRoutes from './routes/user.routes.js'
@@ -30,10 +31,11 @@ import analyzeRoutes from "./routes/analye.routes.js"
 app.use("/api/v1/users",userRoutes)
 app.use("/api/v1/analyze",analyzeRoutes)
 
-app.use(express.static(path.join(__dirname, "client/dist")));
+app.use(express.static(path.join(__dirname, "../../client/dist")));
+
 
 app.get("*", (_, res) => {
-    res.sendFile(path.resolve(__dirname, "client", "dist", "index.html"));
+    res.sendFile(path.resolve(__dirname, "..","..","client", "dist", "index.html"));
   });
 
 app.use(errorHandler)
