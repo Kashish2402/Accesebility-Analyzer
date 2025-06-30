@@ -11,9 +11,7 @@
   },
   "author": "Kashish Gupta",
   "license": "ISC",
-  "dependencies": {
-    "@sparticuz/chromium": "^137.0.1",
-    "axe-core": "^4.10.3",
+  "dependencies": {   
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.6.1",
     "cookie-parser": "^1.4.7",

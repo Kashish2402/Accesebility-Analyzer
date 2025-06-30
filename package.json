@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Kashish2402/Accesebility-Analyzer#readme",
   "dependencies": {
+    "axe-core": "^4.10.3",
     "@sparticuz/chromium": "^137.0.1",
     "bcryptjs": "^3.0.2",
     "cloudinary": "^2.7.0",
